@@ -13,7 +13,4 @@
 
 # ignore the binaries and goland configurations
 .idea
-.idea/*
 bin
-bin/*
-
