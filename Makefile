@@ -57,11 +57,11 @@ ifeq ($(NO_DOCKER), 1)
   IMAGE_BUILD_CMD = imagebuilder
 else
 	ifndef HASDOCKER
-	  DOCKER_CMD := podman run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.12
+	  DOCKER_CMD := podman run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.15
 	  IMAGE_BUILD_CMD = buildah bud
 	  IMAGE_PUSH_CMD = podman push
 	else
-	  DOCKER_CMD := docker run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.12
+	  DOCKER_CMD := docker run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.15
 	  IMAGE_BUILD_CMD = docker build
 	  IMAGE_PUSH_CMD = docker push
 	endif
