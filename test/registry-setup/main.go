@@ -252,6 +252,7 @@ func getCIImageURL() (image *Image, err error) {
 
 func read(path string) (object *corev1.ConfigMap, err error) {
 	reader, openErr := os.Open(path)
+	defer reader.Close()
 	if err != nil {
 		err = fmt.Errorf("unable to load file %s: %s", path, openErr)
 		return
