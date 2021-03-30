@@ -27,6 +27,9 @@ export OLD_OPERATOR_IMAGE_URL_IN_CSV 	= quay.io/openshift/vertical-pod-autoscale
 export OLD_OPERAND_IMAGE_URL_IN_CSV 	= quay.io/openshift/vertical-pod-autoscaler:$(REGISTRY_VERSION)
 export CSV_FILE_PATH_IN_REGISTRY_IMAGE 	= /manifests/$(REGISTRY_VERSION)/vertical-pod-autoscaler.v$(REGISTRY_VERSION).0.clusterserviceversion.yaml
 
+# build image for ci
+CI_REPO ?=registry.svc.ci.openshift.org
+
 # Added LOCAL_OPERATOR_IMAGE for local-image build
 DEV_REPO			?= quay.io/redhat
 DEV_OPERATOR_IMAGE	?= openshift-vertical-pod-autoscaler-operator
@@ -67,8 +70,7 @@ else
   DOCKER_CMD := $DOCKER_RUNTIME run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.15
 endif
 
-# build image for ci
-CI_REPO ?=registry.svc.ci.openshift.org
+
 $(call build-image,vertical-pod-autoscaler-operator,$(CI_IMAGE_REGISTRY)/autoscaling/vertical-pod-autoscaler-operator,./images/ci/Dockerfile,.)
 
 .PHONY: depend
