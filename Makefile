@@ -117,12 +117,12 @@ dev-push:
 
 .PHONY: images
 images: ## Create images
-	$($DOCKER_RUNTIME) push -t "$(IMAGE):$(VERSION)" -t "$(IMAGE):$(MUTABLE_TAG)" ./
+	$(DOCKER_RUNTIME) push -t "$(IMAGE):$(VERSION)" -t "$(IMAGE):$(MUTABLE_TAG)" ./
 
 .PHONY: push
 push:
-	$($DOCKER_RUNTIME) push "$(IMAGE):$(VERSION)"
-	$($DOCKER_RUNTIME) push "$(IMAGE):$(MUTABLE_TAG)"
+	$(DOCKER_RUNTIME) push "$(IMAGE):$(VERSION)"
+	$(DOCKER_RUNTIME) push "$(IMAGE):$(MUTABLE_TAG)"
 
 .PHONY: check
 check: fmt vet lint test ## Check your code
@@ -157,9 +157,11 @@ help:
 
 clean:
 	rm -rf $(OUTPUT_DIR)
-	oc delete mutatingwebhookconfigurations vpa-webhook-config || true
-	oc delete ns openshift-vertical-pod-autoscaler || true
-	oc delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io verticalpodautoscalercontrollers.autoscaling.openshift.io verticalpodautoscalers.autoscaling.k8s.io || true
+	
+clean-deploy:
+	$(KUBECTL) delete mutatingwebhookconfigurations vpa-webhook-config || true
+	$(KUBECTL) delete ns openshift-vertical-pod-autoscaler || true
+	$(KUBECTL) delete crd verticalpodautoscalercheckpoints.autoscaling.k8s.io verticalpodautoscalercontrollers.autoscaling.openshift.io verticalpodautoscalers.autoscaling.k8s.io || true
 
 e2e-olm-local: DEPLOY_MODE := local
 e2e-olm-local: dev-image dev-push deploy-olm-local test-e2e
