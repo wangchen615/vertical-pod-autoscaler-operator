@@ -54,9 +54,9 @@ GO_TEST_PACKAGES :=./pkg/... ./cmd/...
 all: build images check
 
 HASDOCKER := $(shell command -v docker 2> /dev/null)
-ifndef HASDOCKER
+ifeq ($(HASDOCKER), )
   DOCKER_RUNTIME := podman
-  IMAGE_BUILD_CMD := builda bud
+  IMAGE_BUILD_CMD := buildah bud
 else
   DOCKER_RUNTIME := docker
   IMAGE_BUILD_CMD := docker build
@@ -67,7 +67,7 @@ ifeq ($(NO_DOCKER), 1)
   DOCKER_CMD =
   IMAGE_BUILD_CMD = imagebuilder
 else
-  DOCKER_CMD := $DOCKER_RUNTIME run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.15
+  DOCKER_CMD := $(DOCKER_RUNTIME) run --rm -v "$(CURDIR):/go/src/$(REPO_PATH):Z" -w "/go/src/$(REPO_PATH)" openshift/origin-release:golang-1.15
 endif
 
 
@@ -117,7 +117,7 @@ dev-push:
 
 .PHONY: images
 images: ## Create images
-	$(DOCKER_RUNTIME) push -t "$(IMAGE):$(VERSION)" -t "$(IMAGE):$(MUTABLE_TAG)" ./
+	$(IMAGE_BUILD_CMD) -t "$(IMAGE):$(VERSION)" -t "$(IMAGE):$(MUTABLE_TAG)" ./
 
 .PHONY: push
 push:
